@@ -23,3 +23,19 @@
 /app/Config/core.php
 /app/Config/database.php
 /vendors/*
+
+# Editor temp files
+*.swp
+*.swo
+*~
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Local environment/secrets
+.env
+.env.*
+
+# VS Code local settings
+.vscode/
