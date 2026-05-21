@@ -1,4 +1,4 @@
-
+// FIXME copied from class
 <?php
 
 	$inData = getRequestInfo();
