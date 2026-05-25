@@ -1,13 +1,11 @@
-
 <?php
-
 	$inData = getRequestInfo();
 	
 	$id = 0;
 	$firstName = "";
 	$lastName = "";
 
-	$conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331"); 	
+	$conn = new mysqli("localhost", "aimo", "T3therT3st", "deletemeAidan"); 	
 	if( $conn->connect_error )
 	{
 		returnWithError( $conn->connect_error );

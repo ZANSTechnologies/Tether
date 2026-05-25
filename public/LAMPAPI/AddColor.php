@@ -4,7 +4,7 @@
 	$color = $inData["color"];
 	$userId = $inData["userId"];
 
-	$conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331");
+	$conn = new mysqli("localhost", "aimo", "T3therT3st", "deletemeAidan");
 	if ($conn->connect_error) 
 	{
 		returnWithError( $conn->connect_error );
@@ -24,7 +24,7 @@
 		return json_decode(file_get_contents('php://input'), true);
 	}
 
-	function sendResultInfoAsJson( $obj )
+	function sendResultInfSoAsJson( $obj )
 	{
 		header('Content-type: application/json');
 		echo $obj;
