@@ -1,11 +1,12 @@
 <?php
+	// Built from our in-class example
 	$inData = getRequestInfo();
 	
 	$id = 0;
 	$firstName = "";
 	$lastName = "";
 
-	$conn = new mysqli("localhost", "aimo", "T3therT3st", "deletemeAidan"); 	
+	$conn = new mysqli("localhost", "ContactUser", "ContactPassword123!", "ContactManager"); 	
 	if( $conn->connect_error )
 	{
 		returnWithError( $conn->connect_error );
