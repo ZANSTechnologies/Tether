@@ -1,4 +1,6 @@
 <?php
+	require_once 'Functions.php';
+
 	// Fetch POST request JSON from searchColor().
     $inputData = getRequestInfo();
 	
