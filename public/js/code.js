@@ -196,13 +196,26 @@ function searchColor()
 // Called from the addContactButton on tether.html.
 function addContact()
 {
-	let newColor = document.getElementById("colorText").value;
-	document.getElementById("colorAddResult").innerHTML = "";
+	// Get strings from the addContact input fields.
+	let contactFirstName = document.getElementById("addContactFirstName").value.trim();
+	let contactLastName = document.getElementById("addContactLastName").value.trim();
+	let contactPhone = document.getElementById("addContactPhone").value.trim();
+	let contactEmail = document.getElementById("addContactEmail").value.trim();
+	document.getElementById("contactAddResult").innerHTML = "";
 
-	let tmp = {color:newColor,userId,userId};
-	let jsonPayload = JSON.stringify( tmp );
+	// Validate that user entered text in each field.
+    if( contactFirstName == "" || contactLastName == "" || contactPhone == "" || contactEmail == "" )
+    {
+        document.getElementById("contactAddResult").style.color = "red";
+        document.getElementById("contactAddResult").innerHTML = "Please fill in all fields before adding a contact.";
+        return;
+    }
 
-	let url = urlBase + '/AddColor.' + extension;
+	// Create JSON string.
+	let temp = {FirstName:contactFirstName,LastName:contactLastNames,Phone:contactPhone,Email:contactEmail};
+	let jsonPayload = JSON.stringify( temp );
+
+	let url = urlBase + '/AddContact.' + extension;
 	
 	let xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
@@ -211,16 +224,17 @@ function addContact()
 	{
 		xhr.onreadystatechange = function() 
 		{
+			// On successful contact addition...
 			if (this.readyState == 4 && this.status == 200) 
 			{
-				document.getElementById("colorAddResult").innerHTML = "Color has been added";
+				document.getElementById("contactAddResult").innerHTML = contactFirstName + " " + contactLastName + " has been added to contacts!";
 			}
 		};
 		xhr.send(jsonPayload);
 	}
-	catch(err)
+	catch(error)
 	{
-		document.getElementById("colorAddResult").innerHTML = err.message;
+		document.getElementById("contactAddResult").innerHTML = error.message;
 	}
 	
 }
