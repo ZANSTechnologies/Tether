@@ -19,7 +19,7 @@
 	else
 	{
         // Prepare mySQL query.
-		$statement = $mysqlConnection->prepare("select FirstName from Users where FirstName like ? and ID=?");
+		$statement = $mysqlConnection->prepare("select FirstName from Users where FirstName like ? and UserID=?");
 
 		// Prepare the name parameter, concatenating the SQL '%' wildcard on 
 		// both ends.
