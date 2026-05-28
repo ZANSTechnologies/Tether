@@ -8,15 +8,15 @@
 	$firstName = "";
 	$lastName = "";
 
-	$conn = new mysqli("localhost", "ContactUser", "ContactPassword123!", "ContactManager"); 	
-	if( $conn->connect_error )
+	$connection = new mysqli("localhost", "ContactUser", "ContactPassword123!", "ContactManager"); 	
+	if( $connection->connect_error )
 	{
-		returnWithError( $conn->connect_error );
+		returnWithError( $connection->connect_error );
 	}
 	else
 	{
 		// Query Database for Credentials.
-		$statement = $conn->prepare("SELECT ID,FirstName,LastName FROM Users WHERE Login=? AND Password =?");
+		$statement = $connection->prepare("SELECT ID,FirstName,LastName FROM Users WHERE Login=? AND Password =?");
 
 		// JSON from POST request by doLogin() .js function.
 		$statement->bind_param("ss", $inputData["userLogin"], $inputData["userPassword"]);
@@ -34,7 +34,7 @@
 		}
 
 		$statement->close();
-		$conn->close();
+		$connection->close();
 	}
 	
 	///////////////////////////////////////////////////////////////////////////

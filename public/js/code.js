@@ -82,19 +82,26 @@ function saveCookie()
 	let minutes = 20;
 	let date = new Date();
 	date.setTime(date.getTime()+(minutes*60*1000));	
-	document.cookie = "firstName=" + firstName + ",lastName=" + lastName + ",userId=" + userId + ";expires=" + date.toGMTString();
+	document.cookie = "firstName=" + firstName + ",lastName=" + lastName + ",userId=" + userId + ",expires=" + date.toGMTString();
 }
 
-// Used on the tether.html page for reading the user session 
+// Used on the tether.html page for reading and loading the user session and 
+// executes when the document's DOM finishes loading. Prevents users that are  
+// not signed in from accessing tether.html. 
 function readCookie()
 {
 	userId = -1;
 	let data = document.cookie;
 	let splits = data.split(",");
+
+	// Example splits array:
+	// ["firstName=John", "lastName=Smith", "userId=5", "expires=..."]
 	for(var i = 0; i < splits.length; i++) 
 	{
-		let thisOne = splits[i].trim();
-		let tokens = thisOne.split("=");
+		let cookieKeyValue = splits[i].trim();
+
+		// Index 0 is the key, index 1 is the value.  
+		let tokens = cookieKeyValue.split("=");
 		if( tokens[0] == "firstName" )
 		{
 			firstName = tokens[1];
@@ -109,16 +116,18 @@ function readCookie()
 		}
 	}
 	
-	if( userId < 0 )
+	if( userId < 0 ) // no valid user read from cookie
 	{
-		window.location.href = "index.html";
+		window.location.href = "index.html"; // send to landing page
 	}
 	else
 	{
-		document.getElementById("userName").innerHTML = "Logged in as " + firstName + " " + lastName;
+		document.getElementById("userName").innerHTML = "Logged in as " + firstName + " " + lastName + "!";
 	}
 }
 
+// Called from the logoutButton on tether.html. Resets globals and cookie and 
+// redirects user to index.html. 
 function doLogout()
 {
 	userId = 0;
@@ -128,7 +137,64 @@ function doLogout()
 	window.location.href = "index.html";
 }
 
-function addColor()
+// Called from the searchContactButton on tether.html. Populates the page with 
+// the search results.
+function searchColor()
+{
+	let searchText = document.getElementById("searchText").value;
+
+	// empty contactSearchResult span on tether.html
+	document.getElementById("contactSearchResult").innerHTML = "";
+	
+	let contactList = "";
+
+	// Create JSON string of teh search and the current user.
+	let temp = {search:searchText,UserId:userId};
+	let jsonPayload = JSON.stringify( temp );
+
+	let url = urlBase + '/SearchContact.' + extension;
+	
+	// Asynchronous POST request using the SearchContact.php script.
+	let xhr = new XMLHttpRequest();
+	xhr.open("GET", url, true);
+	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+	try
+	{
+		xhr.onreadystatechange = function() 
+		{
+			// After successful request...
+			if (this.readyState == 4 && this.status == 200) 
+			{
+				document.getElementById("contactSearchResult").innerHTML = "Contact(s) have been retrieved!";
+				
+				let jsonObject = JSON.parse( xhr.responseText );
+				
+				// Loop through results array. 
+				// See returnWithInfo() in SearchContact.php.
+				for( let i = 0; i < jsonObject.results.length; i++ )
+				{
+					contactList += jsonObject.results[i];
+					if( i < jsonObject.results.length - 1 )
+					{
+						contactList += "<br />\r\n";
+					}
+				}
+				
+				// On first <p> tag in the document, display the contactList.
+				document.getElementsByTagName("p")[0].innerHTML = contactList;
+			}
+		};
+		xhr.send(jsonPayload);
+	}
+	catch(error)
+	{
+		document.getElementById("contactSearchResult").innerHTML = error.message;
+	}
+	
+}
+
+// Called from the addContactButton on tether.html.
+function addContact()
 {
 	let newColor = document.getElementById("colorText").value;
 	document.getElementById("colorAddResult").innerHTML = "";
@@ -159,47 +225,3 @@ function addColor()
 	
 }
 
-function searchColor()
-{
-	let srch = document.getElementById("searchText").value;
-	document.getElementById("colorSearchResult").innerHTML = "";
-	
-	let colorList = "";
-
-	let tmp = {search:srch,userId:userId};
-	let jsonPayload = JSON.stringify( tmp );
-
-	let url = urlBase + '/SearchColors.' + extension;
-	
-	let xhr = new XMLHttpRequest();
-	xhr.open("POST", url, true);
-	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	try
-	{
-		xhr.onreadystatechange = function() 
-		{
-			if (this.readyState == 4 && this.status == 200) 
-			{
-				document.getElementById("colorSearchResult").innerHTML = "Color(s) has been retrieved";
-				let jsonObject = JSON.parse( xhr.responseText );
-				
-				for( let i=0; i<jsonObject.results.length; i++ )
-				{
-					colorList += jsonObject.results[i];
-					if( i < jsonObject.results.length - 1 )
-					{
-						colorList += "<br />\r\n";
-					}
-				}
-				
-				document.getElementsByTagName("p")[0].innerHTML = colorList;
-			}
-		};
-		xhr.send(jsonPayload);
-	}
-	catch(err)
-	{
-		document.getElementById("colorSearchResult").innerHTML = err.message;
-	}
-	
-}
