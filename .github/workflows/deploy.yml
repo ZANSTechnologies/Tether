@@ -3,7 +3,7 @@ name: Deploy Website
 on:
   push:
     branches:
-      - main
+      - feature-api-create-contact
 
 jobs:
   deploy:

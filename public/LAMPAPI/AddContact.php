@@ -1,39 +1,32 @@
 <?php
+	require_once 'Functions.php';
+
 	$inputData = getRequestInfo();
 	
-	$color = $inputData["color"];
-	$userId = $inputData["userId"];
+	$contactFirstName = $inputData["FirstName"];
+	$contactLastName = $inputData["LastName"];
+	$contactPhone = $inputData["Phone"];
+	$contactEmail = $inputData["Email"];
+	$userId = $inputData["UserID"];
 
-	$conn = new mysqli("localhost", "aimo", "T3therT3st", "deletemeAidan");
-	if ($conn->connect_error) 
+	$connection = new mysqli("localhost", "ContactUser", "ContactPassword123!", "ContactManager"); 	
+	if( $connection->connect_error )
 	{
-		returnWithError( $conn->connect_error );
-	} 
+		returnWithError( $connection->connect_error );
+	}
 	else
 	{
-		$stmt = $conn->prepare("INSERT into Colors (UserId,Name) VALUES(?,?)");
-		$stmt->bind_param("ss", $userId, $color);
-		$stmt->execute();
-		$stmt->close();
-		$conn->close();
+		$statement = $connection->prepare("INSERT into Contacts (FirstName,LastName,Phone,Email) VALUES(?,?,?,?,?)");
+		$statement->bind_param("ssssi", $contactFirstName, $contactLastName, $contactPhone, $contactEmail, $userId);
+		$statement->execute();
+		$statement->close();
+		$connection->close();
 		returnWithError("");
 	}
 
-	function getRequestInfo()
+	function returnWithError( $error )
 	{
-		return json_decode(file_get_contents('php://input'), true);
+		$returnValue = '{"error":"' . $error . '"}';
+		sendResultInfoAsJson( $returnValue );
 	}
-
-	function sendResultInfSoAsJson( $obj )
-	{
-		header('Content-type: application/json');
-		echo $obj;
-	}
-	
-	function returnWithError( $err )
-	{
-		$retValue = '{"error":"' . $err . '"}';
-		sendResultInfoAsJson( $retValue );
-	}
-	
 ?>

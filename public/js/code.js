@@ -139,7 +139,7 @@ function doLogout()
 
 // Called from the searchContactButton on tether.html. Populates the page with 
 // the search results.
-function searchColor()
+function searchContact()
 {
 	let searchText = document.getElementById("searchText").value;
 
@@ -193,7 +193,9 @@ function searchColor()
 	
 }
 
-// Called from the addContactButton on tether.html.
+// Called from the addContactButton on tether.html. Adds a contact to the 
+// Contacts table with the necessary field information. No response back from 
+// the server, unless there's an error.
 function addContact()
 {
 	// Get strings from the addContact input fields.
@@ -212,11 +214,12 @@ function addContact()
     }
 
 	// Create JSON string.
-	let temp = {FirstName:contactFirstName,LastName:contactLastNames,Phone:contactPhone,Email:contactEmail};
+	let temp = {FirstName:contactFirstName,LastName:contactLastNames,Phone:contactPhone,Email:contactEmail,UserID:userId};
 	let jsonPayload = JSON.stringify( temp );
 
 	let url = urlBase + '/AddContact.' + extension;
 	
+	// Make request to server. Should be 1 way.
 	let xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
 	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
@@ -227,7 +230,20 @@ function addContact()
 			// On successful contact addition...
 			if (this.readyState == 4 && this.status == 200) 
 			{
-				document.getElementById("contactAddResult").innerHTML = contactFirstName + " " + contactLastName + " has been added to contacts!";
+				// JSON from returnWithError from AddContact.php.
+				let jsonObject = JSON.parse( xhr.responseText );
+
+				let error = jsonObject.error;
+				
+				if( error === "" )
+				{		
+					document.getElementById("contactAddResult").innerHTML = contactFirstName + " " + contactLastName + " has been added to contacts!";
+				}
+				else
+				{
+					document.getElementById("contactAddResult").innerHTML = "Add Contact Error: " + error;
+					return;
+				}
 			}
 		};
 		xhr.send(jsonPayload);
