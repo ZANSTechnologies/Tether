@@ -10,7 +10,8 @@ body
     background-color: #707070;
 }
 
-select{
+select
+{
     width: 30%;
     margin-left: 35%;
     margin-top: 2%;
@@ -18,7 +19,8 @@ select{
     font-family: 'Ubuntu', sans-serif;
 }
 
-input[type="text"],input[type="password"]{
+input[type="text"], input[type="password"]
+{
     border-radius: 25px;
     text-align: center;
     width: 80%;
@@ -36,10 +38,19 @@ input[type="text"],input[type="password"]{
     font-family: 'Ubuntu', sans-serif;
 }
 
-.buttons:hover{
+.buttons:hover
+{
     background-color: #00d5124f;
     color: #FFFFFF;
     opacity: 50%;
+}
+
+.addContactFields
+{
+    border-radius: 25px;;
+    width: 20%;
+    margin-bottom: 2%;
+    font-family: 'Ubuntu', sans-serif;
 }
 
 #landingPageTitle 
@@ -63,7 +74,8 @@ input[type="text"],input[type="password"]{
     background-color: #b2b2b2;
 }
 
-#loginText{
+#loginText
+{
     display: inline-block;
     font-size: 0.8em;
     width: 90%;
@@ -89,7 +101,8 @@ input[type="text"],input[type="password"]{
     font-size: 20px;
 }
 
-#loginResult{
+#loginResult
+{
     display: inline-block;
     font-size: 0.8em;
     width: 90%;
@@ -111,14 +124,16 @@ input[type="text"],input[type="password"]{
     background-color: #b2b2b2;
 }
 
-#userName{
+#userName
+{
     display: inline-block;
     width: 80%;
     margin-left: 10%;
     text-align: center;
 }
 
-#logoutButton{
+#logoutButton
+{
     width: 20%;
     margin-left: 40%;
 }
@@ -142,13 +157,9 @@ input[type="text"],input[type="password"]{
 	font-size: 20px;
 }
 
-#contactSearchResult{
-    display: none;
-}
-
-#addContactText
+#contactSearchResult
 {
-	font-size: 30px;
+    display: none;
 }
 
 #addContactButton
@@ -156,7 +167,8 @@ input[type="text"],input[type="password"]{
 	font-size: 20px;
 }
 
-#contactAddResult{
+#contactAddResult
+{
     display: inline-block;
     font-size: 0.8em;
     width: 90%;
