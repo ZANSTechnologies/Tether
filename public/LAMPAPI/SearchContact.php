@@ -17,7 +17,7 @@
 	{
         // Prepare mySQL query.
 		$statement = $connection->prepare("SELECT FirstName, LastName, Phone, Email 
-                                   FROM Users 
+                                   FROM Contacts 
                                    WHERE (FirstName LIKE ? OR LastName LIKE ? OR Email LIKE ?) 
                                    AND UserID=?");
 
