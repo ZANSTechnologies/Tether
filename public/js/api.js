@@ -115,11 +115,13 @@ function searchContact()
 				// See returnWithInfo() in SearchContact.php.
 				for( let i = 0; i < jsonObject.results.length; i++ )
 				{
-					contactList += jsonObject.results[i];
-					if( i < jsonObject.results.length - 1 )
-					{
-						contactList += "<br />\r\n";
-					}
+                    let contact = jsonObject.result[i];
+					contactList += contact.FirstName + " " + contact.LastName + " | " + contact.Phone + " | " + contact.Email;
+                   
+                    if( i < jsonObject.results.length - 1 )
+                    {
+                        contactList += "<br />\r\n";
+                    }
 				}
 				
 				// On first <p> tag in the document, display the contactList.
@@ -132,7 +134,6 @@ function searchContact()
 	{
 		document.getElementById("contactSearchResult").innerHTML = error.message;
 	}
-	
 }
 
 // Called from the addContactButton on tether.html. Adds a contact to the 
