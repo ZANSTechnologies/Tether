@@ -16,14 +16,17 @@
 	else
 	{
         // Prepare mySQL query.
-		$statement = $connection->prepare("select FirstName from Users where (FirstName like ? or LastName like ? or Email like ?) and UserID=?");
+		$statement = $connection->prepare("SELECT FirstName, LastName, Phone, Email 
+                                   FROM Contacts 
+                                   WHERE (FirstName LIKE ? OR LastName LIKE ? OR Email LIKE ?) 
+                                   AND UserID=?");
 
 		// Prepare the name parameter, concatenating the SQL '%' wildcard on 
 		// both ends. Can be used for the FirstName, LastName, and Email.
 		$contactName = "%" . $inputData["search"] . "%";
 
 		// Bind $inputData and $inputData["userId"] as parameters (?) to the query.
-		$statement->bind_param("ssss", $contactName, $contactName, $contactName, $inputData["UserId"]);
+		$statement->bind_param("sssi", $contactName, $contactName, $contactName, $inputData["UserID"]);
 		
 		// Execute the prepared query statement.
 		$statement->execute();

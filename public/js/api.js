@@ -1,12 +1,3 @@
-// Literal Constants.
-const urlBase = 'http://tetherbyzans.com/LAMPAPI';
-const extension = 'php';
-
-// User specific globals.
-let userId = 0;
-let firstName = "";
-let lastName = "";
-
 // Used for the (index.html) landing page login, id="loginButton".
 function doLogin()
 {
@@ -76,56 +67,7 @@ function doLogin()
 
 }
 
-// Save user session.
-function saveCookie()
-{
-	let minutes = 20;
-	let date = new Date();
-	date.setTime(date.getTime()+(minutes*60*1000));	
-	document.cookie = "firstName=" + firstName + ",lastName=" + lastName + ",userId=" + userId + ",expires=" + date.toGMTString();
-}
-
-// Used on the tether.html page for reading and loading the user session and 
-// executes when the document's DOM finishes loading. Prevents users that are  
-// not signed in from accessing tether.html. 
-function readCookie()
-{
-	userId = -1;
-	let data = document.cookie;
-	let splits = data.split(",");
-
-	// Example splits array:
-	// ["firstName=John", "lastName=Smith", "userId=5", "expires=..."]
-	for(var i = 0; i < splits.length; i++) 
-	{
-		let cookieKeyValue = splits[i].trim();
-
-		// Index 0 is the key, index 1 is the value.  
-		let tokens = cookieKeyValue.split("=");
-		if( tokens[0] == "firstName" )
-		{
-			firstName = tokens[1];
-		}
-		else if( tokens[0] == "lastName" )
-		{
-			lastName = tokens[1];
-		}
-		else if( tokens[0] == "userId" )
-		{
-			userId = parseInt( tokens[1].trim() );
-		}
-	}
-	
-	if( userId < 0 ) // no valid user read from cookie
-	{
-		window.location.href = "index.html"; // send to landing page
-	}
-	else
-	{
-		document.getElementById("userName").innerHTML = "Logged in as " + firstName + " " + lastName + "!";
-	}
-}
-
+// NOT API -> NO SERVER INTERACTION
 // Called from the logoutButton on tether.html. Resets globals and cookie and 
 // redirects user to index.html. 
 function doLogout()
@@ -139,7 +81,7 @@ function doLogout()
 
 // Called from the searchContactButton on tether.html. Populates the page with 
 // the search results.
-function searchColor()
+function searchContact()
 {
 	let searchText = document.getElementById("searchText").value;
 
@@ -148,15 +90,15 @@ function searchColor()
 	
 	let contactList = "";
 
-	// Create JSON string of teh search and the current user.
-	let temp = {search:searchText,UserId:userId};
+	// Create JSON string of the search and the current user.
+	let temp = {search:searchText,UserID:userId};
 	let jsonPayload = JSON.stringify( temp );
 
 	let url = urlBase + '/SearchContact.' + extension;
 	
 	// Asynchronous POST request using the SearchContact.php script.
 	let xhr = new XMLHttpRequest();
-	xhr.open("GET", url, true);
+	xhr.open("POST", url, true);
 	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
 	try
 	{
@@ -173,11 +115,13 @@ function searchColor()
 				// See returnWithInfo() in SearchContact.php.
 				for( let i = 0; i < jsonObject.results.length; i++ )
 				{
-					contactList += jsonObject.results[i];
-					if( i < jsonObject.results.length - 1 )
-					{
-						contactList += "<br />\r\n";
-					}
+                    let contact = jsonObject.results[i];
+					contactList += contact.FirstName + " " + contact.LastName + " | " + contact.Phone + " | " + contact.Email;
+                   
+                    if( i < jsonObject.results.length - 1 )
+                    {
+                        contactList += "<br />\r\n";
+                    }
 				}
 				
 				// On first <p> tag in the document, display the contactList.
@@ -190,20 +134,35 @@ function searchColor()
 	{
 		document.getElementById("contactSearchResult").innerHTML = error.message;
 	}
-	
 }
 
-// Called from the addContactButton on tether.html.
+// Called from the addContactButton on tether.html. Adds a contact to the 
+// Contacts table with the necessary field information. No response back from 
+// the server, unless there's an error.
 function addContact()
 {
-	let newColor = document.getElementById("colorText").value;
-	document.getElementById("colorAddResult").innerHTML = "";
+	// Get strings from the addContact input fields.
+	let contactFirstName = document.getElementById("addContactFirstName").value.trim();
+	let contactLastName = document.getElementById("addContactLastName").value.trim();
+	let contactPhone = document.getElementById("addContactPhone").value.trim();
+	let contactEmail = document.getElementById("addContactEmail").value.trim();
+	document.getElementById("contactAddResult").innerHTML = "";
 
-	let tmp = {color:newColor,userId,userId};
-	let jsonPayload = JSON.stringify( tmp );
+	// Validate that user entered text in each field.
+    if( contactFirstName == "" || contactLastName == "" || contactPhone == "" || contactEmail == "" )
+    {
+        document.getElementById("contactAddResult").style.color = "red";
+        document.getElementById("contactAddResult").innerHTML = "Please fill in all fields before adding a contact.";
+        return;
+    }
 
-	let url = urlBase + '/AddColor.' + extension;
+	// Create JSON string.
+	let temp = {FirstName:contactFirstName,LastName:contactLastName,Phone:contactPhone,Email:contactEmail,UserID:userId};
+	let jsonPayload = JSON.stringify( temp );
+
+	let url = urlBase + '/AddContact.' + extension;
 	
+	// Make request to server. Should be 1 way.
 	let xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
 	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
@@ -211,17 +170,29 @@ function addContact()
 	{
 		xhr.onreadystatechange = function() 
 		{
+			// On successful contact addition...
 			if (this.readyState == 4 && this.status == 200) 
 			{
-				document.getElementById("colorAddResult").innerHTML = "Color has been added";
+				// JSON from returnWithError from AddContact.php.
+				let jsonObject = JSON.parse( xhr.responseText );
+
+				let error = jsonObject.error;
+				
+				if( error == "" )
+				{		
+					document.getElementById("contactAddResult").innerHTML = jsonObject.FirstName + " " + jsonObject.LastName + " has been added to contacts!";
+				}
+				else
+				{
+					document.getElementById("contactAddResult").innerHTML = "Add Contact Error: " + error;
+					return;
+				}
 			}
 		};
 		xhr.send(jsonPayload);
 	}
-	catch(err)
+	catch(error)
 	{
-		document.getElementById("colorAddResult").innerHTML = err.message;
+		document.getElementById("contactAddResult").innerHTML = error.message;
 	}
-	
 }
-

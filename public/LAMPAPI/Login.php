@@ -50,5 +50,4 @@
 		$returnValue = '{"ID":' . $ID . ',"FirstName":"' . $FirstName . '","LastName":"' . $LastName . '","error":""}';
 		sendResultInfoAsJson( $returnValue );
 	}
-	
 ?>
