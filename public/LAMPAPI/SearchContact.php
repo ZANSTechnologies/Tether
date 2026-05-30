@@ -26,7 +26,7 @@
 		$contactName = "%" . $inputData["search"] . "%";
 
 		// Bind $inputData and $inputData["userId"] as parameters (?) to the query.
-		$statement->bind_param("sssi", $contactName, $contactName, $contactName, $inputData["UserId"]);
+		$statement->bind_param("sssi", $contactName, $contactName, $contactName, $inputData["UserID"]);
 		
 		// Execute the prepared query statement.
 		$statement->execute();

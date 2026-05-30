@@ -91,7 +91,7 @@ function searchContact()
 	let contactList = "";
 
 	// Create JSON string of the search and the current user.
-	let temp = {search:searchText,UserId:userId};
+	let temp = {search:searchText,UserID:userId};
 	let jsonPayload = JSON.stringify( temp );
 
 	let url = urlBase + '/SearchContact.' + extension;
@@ -157,7 +157,7 @@ function addContact()
     }
 
 	// Create JSON string.
-	let temp = {FirstName:contactFirstName,LastName:contactLastNames,Phone:contactPhone,Email:contactEmail,UserID:userId};
+	let temp = {FirstName:contactFirstName,LastName:contactLastName,Phone:contactPhone,Email:contactEmail,UserID:userId};
 	let jsonPayload = JSON.stringify( temp );
 
 	let url = urlBase + '/AddContact.' + extension;
@@ -178,9 +178,9 @@ function addContact()
 
 				let error = jsonObject.error;
 				
-				if( error === "" )
+				if( error == "" )
 				{		
-					document.getElementById("contactAddResult").innerHTML = contactFirstName + " " + contactLastName + " has been added to contacts!";
+					document.getElementById("contactAddResult").innerHTML = jsonObject.FirstName + " " + jsonObject.LastName + " has been added to contacts!";
 				}
 				else
 				{
@@ -195,5 +195,4 @@ function addContact()
 	{
 		document.getElementById("contactAddResult").innerHTML = error.message;
 	}
-	
 }
