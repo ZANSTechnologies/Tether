@@ -90,7 +90,7 @@ function searchContact()
 	
 	let contactList = "";
 
-	// Create JSON string of teh search and the current user.
+	// Create JSON string of the search and the current user.
 	let temp = {search:searchText,UserId:userId};
 	let jsonPayload = JSON.stringify( temp );
 
