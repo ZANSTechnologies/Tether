@@ -115,7 +115,7 @@ function searchContact()
 				// See returnWithInfo() in SearchContact.php.
 				for( let i = 0; i < jsonObject.results.length; i++ )
 				{
-                    let contact = jsonObject.result[i];
+                    let contact = jsonObject.results[i];
 					contactList += contact.FirstName + " " + contact.LastName + " | " + contact.Phone + " | " + contact.Email;
                    
                     if( i < jsonObject.results.length - 1 )
