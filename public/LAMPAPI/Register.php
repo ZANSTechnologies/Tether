@@ -1,13 +1,13 @@
 <?php
-    // FIXME
-	require_once 'Functions.php';
+	require_once 'Functions.php'; 
 
-	// Fetch POST request JSON from doRegister().
+	// Fetch POST request JSON from...
 	$inputData = getRequestInfo();
 	
-	$id = 0;
-	$firstName = "";
-	$lastName = "";
+	$login = $inputData["userLogin"];
+	$password = $inputData["userPassword"];
+	$firstName = $inputData["userFirstName"];
+	$lastName = $inputData["userLastName"];
 
 	$connection = new mysqli("localhost", "ContactUser", "ContactPassword123!", "ContactManager"); 	
 	if( $connection->connect_error )
@@ -16,11 +16,10 @@
 	}
 	else
 	{
-		// Query Database for Credentials.
-		$statement = $connection->prepare("SELECT ID,FirstName,LastName FROM Users WHERE Login=? AND Password =?");
+		// Prepare the User insert SQL statement.
+		$statement = $connection->prepare("INSERT INTO Users (FirstName,LastName,Login,Password) VALUES(?,?,?,?)");
 
-		// JSON from POST request by doLogin() .js function.
-		$statement->bind_param("ss", $inputData["userLogin"], $inputData["userPassword"]);
+		$statement->bind_param("ssss", $firstName, $lastName, $login, $password);
 		$statement->execute();
 		$result = $statement->get_result();
 
@@ -31,7 +30,7 @@
 		}
 		else
 		{
-			returnWithError("No Records Found");
+			returnWithError("Could not register user" . $firstName . " " . $lastName);
 		}
 
 		$statement->close();
