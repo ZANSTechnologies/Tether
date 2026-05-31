@@ -21,12 +21,13 @@
 
 		$statement->bind_param("ssss", $firstName, $lastName, $login, $password);
 		$statement->execute();
-		$result = $statement->get_result();
+		# $result = $statement->get_result(); -> An INSERT does not return a result
 
-		// Loop through result set array by row.
-		if( $row = $result->fetch_assoc()  )
+		if ($statement->affected_rows > 0)
 		{
-			returnWithInfo( $row['FirstName'], $row['LastName'], $row['ID'] );
+			// insert_id will return the most recently added ID
+			$newUserID = $statement->insert_id;
+			returnWithInfo( $firstName, $lastName, $newUserID );
 		}
 		else
 		{
