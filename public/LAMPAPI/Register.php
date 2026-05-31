@@ -4,10 +4,10 @@
 	// Fetch POST request JSON from...
 	$inputData = getRequestInfo();
 	
-	$login = $inputData["userLogin"];
-	$password = $inputData["userPassword"];
 	$firstName = $inputData["userFirstName"];
 	$lastName = $inputData["userLastName"];
+	$login = $inputData["userLogin"];
+	$password = $inputData["userPassword"];
 
 	$connection = new mysqli("localhost", "ContactUser", "ContactPassword123!", "ContactManager"); 	
 	if( $connection->connect_error )
