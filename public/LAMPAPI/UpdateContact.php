@@ -35,7 +35,7 @@
         else if ($statement->affected_rows == 0) 
         {
             // In the case it is a non-existant contact
-            returnWithError("Cannot update if contact does not exist.")
+            returnWithError("Cannot update if contact does not exist.");
         }
 		else
 		{
