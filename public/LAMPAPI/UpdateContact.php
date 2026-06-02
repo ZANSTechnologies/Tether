@@ -4,13 +4,13 @@
 	// Fetch POST request JSON from...
 	$inputData = getRequestInfo();
     
-    $text = $inputData["text"]
-    $contactID = $inputData["contactID"]
+    $text = $inputData["text"];
+    $contactID = $inputData["contactID"];
     $toUpdate = $inputData["toUpdate"];
-    $userColumns = ["FirstName", "LastName", "Phone", "Email"] 
-    if (!in_array($toUpdate, $userColumns) 
+    $userColumns = ["FirstName", "LastName", "Phone", "Email"]; 
+    if (!in_array($toUpdate, $userColumns)) 
     {
-        ReturnWithError("Invalid Field " . $toUpdate);
+        returnWithError("Invalid Field " . $toUpdate);
     }
 
 	$connection = new mysqli("localhost", "ContactUser", "ContactPassword123!", "ContactManager"); 	
@@ -39,7 +39,7 @@
         }
 		else
 		{
-			returnWithError("Could not update "  . $firstName . " " . $lastName . "'s user information.");
+			returnWithError("Could not update contact: " . $statement->error);
 		}
 
 		$statement->close();
@@ -56,7 +56,7 @@
 	
     function returnWithInfo( $field, $newValue, $contactID )
     {
-        $returnValue = '{"contactID":"",' . $contactID . ',"updatedField":"' . $field . '","newValue":"' . $newValue . '","error":""}';
+        $returnValue = '{"contactID":' . $contactID . ',"updatedField":"' . $field . '","newValue":"' . $newValue . '","error":""}';
         sendResultInfoAsJson( $returnValue );
     }
 ?>
