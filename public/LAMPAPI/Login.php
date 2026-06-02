@@ -3,10 +3,6 @@
 
 	// Fetch POST request JSON from doLogin().
 	$inputData = getRequestInfo();
-	
-	$id = 0;
-	$firstName = "";
-	$lastName = "";
 
 	$connection = new mysqli("localhost", "ContactUser", "ContactPassword123!", "ContactManager"); 	
 	if( $connection->connect_error )

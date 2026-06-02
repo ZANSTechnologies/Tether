@@ -1,13 +1,13 @@
 <?php
-    // FIXME
-	require_once 'Functions.php';
+	require_once 'Functions.php'; 
 
-	// Fetch POST request JSON from doRegister().
+	// Fetch POST request JSON from...
 	$inputData = getRequestInfo();
 	
-	$id = 0;
-	$firstName = "";
-	$lastName = "";
+	$firstName = $inputData["userFirstName"];
+	$lastName = $inputData["userLastName"];
+	$login = $inputData["userLogin"];
+	$password = $inputData["userPassword"];
 
 	$connection = new mysqli("localhost", "ContactUser", "ContactPassword123!", "ContactManager"); 	
 	if( $connection->connect_error )
@@ -16,22 +16,22 @@
 	}
 	else
 	{
-		// Query Database for Credentials.
-		$statement = $connection->prepare("SELECT ID,FirstName,LastName FROM Users WHERE Login=? AND Password =?");
+		// Prepare the User insert SQL statement.
+		$statement = $connection->prepare("INSERT INTO Users (FirstName,LastName,Login,Password) VALUES(?,?,?,?)");
 
-		// JSON from POST request by doLogin() .js function.
-		$statement->bind_param("ss", $inputData["userLogin"], $inputData["userPassword"]);
+		$statement->bind_param("ssss", $firstName, $lastName, $login, $password);
 		$statement->execute();
-		$result = $statement->get_result();
+		# $result = $statement->get_result(); -> An INSERT does not return a result
 
-		// Loop through result set array by row.
-		if( $row = $result->fetch_assoc()  )
+		if ($statement->affected_rows > 0)
 		{
-			returnWithInfo( $row['FirstName'], $row['LastName'], $row['ID'] );
+			// insert_id will return the most recently added ID
+			$newUserID = $statement->insert_id;
+			returnWithInfo( $firstName, $lastName, $newUserID );
 		}
 		else
 		{
-			returnWithError("No Records Found");
+			returnWithError("Could not register user" . $firstName . " " . $lastName);
 		}
 
 		$statement->close();
