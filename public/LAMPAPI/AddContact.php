@@ -26,13 +26,9 @@
 			$contactPhone, 
 			$contactEmail, 
 			$userId);
-		$statement->execute();
-		$result = $statement->get_result();
-
-		// Loop through result set array by row.
-		if( $row = $result->fetch_assoc()  )
+		if ($statement->execute()) // no $statement->get_result() for INSERT's
 		{
-			returnWithInfo( $row['FirstName'], $row['LastName'], $row['Phone'], $row['Email'], $row['UserID'] );
+			returnWithInfo($contactFirstName, $contactLastName, $contactPhone, $contactEmail, $userId);
 		}
 		else
 		{
@@ -49,13 +45,13 @@
     // Helper Functions
 	function returnWithError( $error )
 	{
-		$returnValue = '{"ID":0,"FirstName":"","LastName":"","Phone":"","Email":"","UserID:"","error":"' . $error . '"}';
+		$returnValue = '{"ID":0,"FirstName":"","LastName":"","Phone":"","Email":"","UserID":"","error":"' . $error . '"}';
 		sendResultInfoAsJson( $returnValue );
 	}
 	
 	function returnWithInfo( $FirstName, $LastName, $Phone, $Email, $UserID )
 	{
-		$returnValue = '{"FirstName":"' . $FirstName . '","LastName":"' . $LastName . '","Phone":"' . $Phone . '","Email":"' . $Email . '","UserID:"' . $UserID . '","error":""}';
+		$returnValue = '{"FirstName":"' . $FirstName . '","LastName":"' . $LastName . '","Phone":"' . $Phone . '","Email":"' . $Email . '","UserID":"' . $UserID . '","error":""}';
 		sendResultInfoAsJson( $returnValue );
 	}
 ?>
