@@ -52,6 +52,9 @@ function searchContact()
 				
 				// On first <p> tag in the document, display the contactList.
 				document.getElementById("contactList").innerHTML = contactList;
+				
+				// Create the Graph based on search results
+				renderContactGraph(jsonObject.results);
 			}
 		};
 		xhr.send(jsonPayload);
