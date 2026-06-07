@@ -16,7 +16,7 @@
 	else
 	{
         // Prepare mySQL query.
-		$statement = $connection->prepare("SELECT FirstName, LastName, Phone, Email 
+		$statement = $connection->prepare("SELECT FirstName, LastName, Phone, Email, ID
                                    FROM Contacts 
                                    WHERE (FirstName LIKE ? OR LastName LIKE ? OR Email LIKE ?) 
                                    AND UserID=?");
@@ -44,7 +44,7 @@
 			$searchCount++;
 
 			// Create returning JSON string.
-			$searchResults .= '{"FirstName" : "' . $row["FirstName"] . '", "LastName" : "' . $row["LastName"] . '", "Phone" : "' . $row["Phone"] . '", "Email" : "' . $row["Email"] . '"}';
+			$searchResults .= '{"FirstName" : "' . $row["FirstName"] . '", "LastName" : "' . $row["LastName"] . '", "Phone" : "' . $row["Phone"] . '", "Email" : "' . $row["Email"] . '", "ID" : "' . $row["ID"] . '"}';
 		}
 		
 		// Return results (no records or more) as JSON.
@@ -65,7 +65,7 @@
     // Helper Functions
 	function returnWithError( $error )
 	{
-		$retValue = '{"ID":0,"FirstName":"","LastName":"","error":"' . $error . '"}';
+		$retValue = '{"results":[],"error":"' . $error . '"}';
 		sendResultInfoAsJson( $retValue );
 	}
 	
