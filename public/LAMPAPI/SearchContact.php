@@ -16,7 +16,7 @@
 	else
 	{
         // Prepare mySQL query.
-		$statement = $connection->prepare("SELECT FirstName, LastName, Phone, Email 
+		$statement = $connection->prepare("SELECT FirstName, LastName, Phone, Email, ID
                                    FROM Contacts 
                                    WHERE (FirstName LIKE ? OR LastName LIKE ? OR Email LIKE ?) 
                                    AND UserID=?");
@@ -65,7 +65,7 @@
     // Helper Functions
 	function returnWithError( $error )
 	{
-		$retValue = '{"results":"","error":"' . $error . '"}';
+		$retValue = '{"results":[],"error":"' . $error . '"}';
 		sendResultInfoAsJson( $retValue );
 	}
 	

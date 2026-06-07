@@ -2,7 +2,7 @@
 // the search results.
 function searchContact()
 {
-	let searchText = document.getElementById("searchText").value;
+	let searchText = document.getElementById("searchInput").value;
 
 	// empty contactSearchResult span on tether.html
 	document.getElementById("contactSearchResult").innerHTML = "";
@@ -29,6 +29,13 @@ function searchContact()
 				document.getElementById("contactSearchResult").innerHTML = "Contact(s) have been retrieved!";
 				
 				let jsonObject = JSON.parse( xhr.responseText );
+
+				// when an error is present and the array is not populated.
+				if (jsonObject.error !== "")
+				{
+					document.getElementById("contactSearchResult").innerHTML = jsonObject.error;
+					return;
+				}
 				
 				// Loop through results array. 
 				// See returnWithInfo() in SearchContact.php.
@@ -44,7 +51,7 @@ function searchContact()
 				}
 				
 				// On first <p> tag in the document, display the contactList.
-				document.getElementsByTagName("p")[0].innerHTML = contactList;
+				document.getElementById("contactList").innerHTML = contactList;
 			}
 		};
 		xhr.send(jsonPayload);

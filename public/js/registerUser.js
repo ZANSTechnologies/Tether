@@ -3,10 +3,10 @@
 function registerUser()
 {
     // Get registration input.
-    let firstName = document.getElementById("userFirstName").value;
-    let lastName  = document.getElementById("userLastName").value;
-    let login     = document.getElementById("userLogin").value;
-    let password  = document.getElementById("userPassword").value;
+    let firstName = document.getElementById("first").value;
+    let lastName  = document.getElementById("last").value;
+    let login     = document.getElementById("username").value;
+    let password  = document.getElementById("password").value;
 
     // Create JSON string.
     let temp = {userFirstName:firstName, userLastName:lastName, userLogin:login, userPassword:password};
@@ -42,7 +42,7 @@ function registerUser()
 
                 saveCookie();
 
-                window.location.href = "tether.html";
+                window.location.href = "dashboard.html";
             }
         };
         xhr.send(jsonPayload);

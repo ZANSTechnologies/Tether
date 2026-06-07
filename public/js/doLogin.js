@@ -7,13 +7,10 @@ function doLogin()
 	lastName = "";
 	
 	// Get userLogin and userPassword input.
-	let login = document.getElementById("userLogin").value;
-	let password = document.getElementById("userPassword").value;
+	let login = document.getElementById("username").value;
+	let password = document.getElementById("password").value;
 //	var hash = md5( password );
 	
-	// loginResult may not be viewable to the user on successful login...
-	document.getElementById("loginResult").innerHTML = "";
-
 	// Create JSON string.
 	let temp = {userLogin:login,userPassword:password};
 //	var tmp = {login:login,password:hash};
@@ -44,7 +41,8 @@ function doLogin()
 		
 				// returnWithError() from Login.php: "ID":0 
 				if( userId < 1 )
-				{		
+				{	
+					document.getElementById("loginResult").classList.add("text-danger");	
 					document.getElementById("loginResult").innerHTML = "Username or Password is incorrect! Please try again.";
 					return;
 				}
@@ -55,13 +53,14 @@ function doLogin()
 				saveCookie();
 	
 				// update url / enter the tether webapp
-				window.location.href = "tether.html";
+				window.location.href = "dashboard.html";
 			}
 		};
 		xhr.send(jsonPayload);
 	}
 	catch(err)
 	{
+		document.getElementById("loginResult").classList.add("text-danger");	
 		document.getElementById("loginResult").innerHTML = err.message;
 	}
 }
