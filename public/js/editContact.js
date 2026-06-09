@@ -5,6 +5,7 @@
 document.addEventListener("DOMContentLoaded", function()
 {
     readCookie();
+
     loadContactData();
 
     // Wire up form submission to editContact().
@@ -24,7 +25,7 @@ function loadContactData()
 
     if (!contactId)
     {
-        window.location.href = "dashboard.html";
+        window.location.href = "../html/dashboard.html";
         return;
     }
 
