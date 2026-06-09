@@ -3,13 +3,11 @@
 // userID (int): the ID of the user that owns the contact. 
 function deleteContact(contactID, userID)
 {
-    // Create JSON string.
     let temp = {contactID:contactID, userID:userID};
     let jsonPayload = JSON.stringify(temp);
 
     let url = urlBase + '/DeleteContact.' + extension;
 
-    // Prepare an asynchronous POST request using the DeleteContact.php script.
     let xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
@@ -20,18 +18,25 @@ function deleteContact(contactID, userID)
         {
             if (this.readyState == 4 && this.status == 200)
             {
-                // JSON from returnWithInfo() or returnWithError() in DeleteContact.php.
                 let jsonObject = JSON.parse(xhr.responseText);
 
-                // "ID":0
                 if (jsonObject.ID < 1)
                 {
                     document.getElementById("deleteResult").innerHTML = jsonObject.error;
                     return;
                 }
 
-                // Delete was successful, should update list
                 document.getElementById("deleteResult").innerHTML = "Contact deleted successfully.";
+
+                // FIX: Remove the deleted contact from the cached searchResults array
+                // and re-render the list so the user sees the change immediately,
+                // without needing to search again.
+                searchResults = searchResults.filter(function(c)
+                {
+                    return c.ID != contactID;
+                });
+                renderContactList(searchResults);
+                renderContactGraph(searchResults);
             }
         };
         xhr.send(jsonPayload);

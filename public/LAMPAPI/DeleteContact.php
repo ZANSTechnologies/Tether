@@ -4,7 +4,7 @@
 	// Fetch POST request JSON from doLogin().
 	$inputData = getRequestInfo();
 	
-    // The only information the frontend will send to the databse is the contact's
+    // The only information the frontend will send to the database is the contact's
     // ID and its associated user. This is so if there are multiple contacts 
     // with the same information, we can isolate one from many. This assumes that
     // the contact ID is attached to some "button" input specific to that contact. 
@@ -18,13 +18,12 @@
 	}
 	else
 	{
-		// Query Database for Credentials.
 		$statement = $connection->prepare("DELETE FROM Contacts WHERE ID=? AND UserID=?");
 
-		// JSON from POST request by doLogin() .js function.
 		$statement->bind_param("ss", $contactID, $userID);
 		$statement->execute();
-		$result = $statement->get_result();
+		// FIX: Removed $statement->get_result() — DELETE does not return a result set.
+		// Calling get_result() on a non-SELECT statement causes a fatal PHP error.
 
         // Delete Success!
         if( $statement->affected_rows > 0 )

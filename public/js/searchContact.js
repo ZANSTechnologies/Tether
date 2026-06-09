@@ -2,7 +2,6 @@ var searchResults = [];
 
 function prepareUpdate(contactID, contactFirstName, contactLastName, contactPhone, contactEmail)
 {
-	// setup search parameters
 	const paramsData = {
 		id: contactID,
 		firstName: contactFirstName,
@@ -12,99 +11,51 @@ function prepareUpdate(contactID, contactFirstName, contactLastName, contactPhon
 	};
 	const searchParams = new URLSearchParams(paramsData);
 
-	// Append the url with the search parameters
-	const url = new URL('https://tetherbyzans.com/html/editContact.html')	
+	const url = new URL('https://tetherbyzans.com/html/editContact.html');
 	url.search = searchParams.toString();
 	
-	// Perform redirct to editContact.html with injected searchParams
 	window.location.href = url.toString();
 }
 
-// Called from the searchContactButton on tether.html. Populates the page with 
+// Called from the searchContactButton on dashboard.html. Populates the page with 
 // the search results.
 function searchContact()
 {
-	// Begin with an empty array.
 	searchResults.length = 0;
 
 	let searchText = document.getElementById("searchInput").value;
 
-	// empty contactSearchResult span on tether.html
 	document.getElementById("contactSearchResult").innerHTML = "";
-	
-	let contactList = "";
+	document.getElementById("contactList").innerHTML = "";
 
-	// Create JSON string of the search and the current user.
-	let temp = {search:searchText,UserID:userId};
-	let jsonPayload = JSON.stringify( temp );
+	let temp = {search:searchText, UserID:userId};
+	let jsonPayload = JSON.stringify(temp);
 
 	let url = urlBase + '/SearchContact.' + extension;
 	
-	// Asynchronous POST request using the SearchContact.php script.
 	let xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
 	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
 	try
 	{
 		xhr.onreadystatechange = function() 
 		{
-			// After successful request...
 			if (this.readyState == 4 && this.status == 200) 
 			{
-				document.getElementById("contactSearchResult").innerHTML = "Contact(s) have been retrieved!";
-				
-				let jsonObject = JSON.parse( xhr.responseText );
+				let jsonObject = JSON.parse(xhr.responseText);
 
-				// when an error is present and the array is not populated.
 				if (jsonObject.error !== "")
 				{
 					document.getElementById("contactSearchResult").innerHTML = jsonObject.error;
 					return;
 				}
-				
-				// Populate stored array
+
+				document.getElementById("contactSearchResult").innerHTML = "Contact(s) have been retrieved!";
+
 				searchResults = jsonObject.results;
 
-				for (let i = 0; i < jsonObject.results.length; i++)
-				{
-					let contact = jsonObject.results[i];
-
-					contactList += contact.FirstName + " " + contact.LastName + 
-								" | " + contact.Phone + 
-								" | " + contact.Email;
-
-					// Update button
-					contactList += ` <button class="updateButton"
-							data-id="${contact.ID}"
-							data-first="${contact.FirstName}"
-							data-last="${contact.LastName}"
-							data-phone="${contact.Phone}"
-							data-email="${contact.Email}">Edit</button>`;
-
-					// Delete button
-					contactList += ` <button onclick="deleteContact(${contact.ID}, ${userId})">Delete</button>`;
-
-					if (i < jsonObject.results.length - 1)
-					{
-						contactList += "<br />\r\n";
-					}
-				}
-
-				document.getElementById("contactList").innerHTML = contactList;
-
-				document.querySelectorAll(".updateButton").forEach(btn => {
-					btn.addEventListener("click", () => {
-						prepareUpdate(
-							btn.dataset.id,
-							btn.dataset.first,
-							btn.dataset.last,
-							btn.dataset.phone,
-							btn.dataset.email
-						);
-					});
-				});
-					
-				// Create the Graph based on search results
+				renderContactList(jsonObject.results);
 				renderContactGraph(jsonObject.results);
 			}
 		};
@@ -114,4 +65,51 @@ function searchContact()
 	{
 		document.getElementById("contactSearchResult").innerHTML = error.message;
 	}
+}
+
+// FIX: Extracted list rendering into its own function so deleteContact() can
+// call it to refresh the list after a successful delete, without a full re-search.
+function renderContactList(contacts)
+{
+	const contactListEl = document.getElementById("contactList");
+	contactListEl.innerHTML = "";
+
+	contacts.forEach(function(contact)
+	{
+		// FIX: Build each contact as a .contact-item glass card per frutiger.css,
+		// instead of raw unstyled string concatenation.
+		const item = document.createElement("div");
+		item.className = "contact-item";
+
+		const info = document.createElement("span");
+		info.innerHTML = "<strong>" + contact.FirstName + " " + contact.LastName + "</strong>"
+			+ " &nbsp;|&nbsp; " + contact.Phone
+			+ " &nbsp;|&nbsp; " + contact.Email;
+
+		const actions = document.createElement("div");
+		actions.className = "d-flex gap-2";
+
+		const editBtn = document.createElement("button");
+		editBtn.className = "btn btn-primary btn-sm";
+		editBtn.textContent = "Edit";
+		editBtn.addEventListener("click", function()
+		{
+			prepareUpdate(contact.ID, contact.FirstName, contact.LastName, contact.Phone, contact.Email);
+		});
+
+		const deleteBtn = document.createElement("button");
+		deleteBtn.className = "btn btn-sm";
+		deleteBtn.style.cssText = "background:rgba(220,53,69,0.8);color:white;border-radius:12px;border:1px solid rgba(255,255,255,0.4);";
+		deleteBtn.textContent = "Delete";
+		deleteBtn.addEventListener("click", function()
+		{
+			deleteContact(contact.ID, userId);
+		});
+
+		actions.appendChild(editBtn);
+		actions.appendChild(deleteBtn);
+		item.appendChild(info);
+		item.appendChild(actions);
+		contactListEl.appendChild(item);
+	});
 }
