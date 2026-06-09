@@ -1,0 +1,260 @@
+/*
+   frutiger.css — Frutiger Aero skin for Tether.
+   Apply to all pages by linking after Bootstrap
+*/
+
+/* Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+
+/* Base */
+body 
+{
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+    background-image: url('../Frutiger_mild_image.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: #1a3a4a;
+}
+
+/* Glass card */
+.glass-card 
+{
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Glass card, top highlight */
+.glass-card::before 
+{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient
+    (
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.9),
+        transparent
+    );
+}
+
+/* Glass card left highlight */
+.glass-card::after 
+{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 100%;
+    background: linear-gradient
+    (
+        180deg,
+        rgba(255, 255, 255, 0.8),
+        transparent,
+        rgba(255, 255, 255, 0.3)
+    );
+}
+
+/* Headings */
+h1, h2, h3 
+{
+    color: #1a3a4a;
+    font-weight: 700;
+    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+}
+
+/* Inputs */
+.form-control 
+{
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 12px;
+    color: #1a3a4a;
+    backdrop-filter: blur(5px);
+    transition: all 0.2s ease;
+}
+
+.form-control:focus 
+{
+    background: rgba(255, 255, 255, 0.75);
+    border-color: rgba(100, 180, 255, 0.8);
+    box-shadow: 0 0 0 3px rgba(100, 180, 255, 0.25);
+    outline: none;
+}
+
+.form-control::placeholder 
+{
+    color: rgba(26, 58, 74, 0.5);
+}
+
+/* Glossy Buttons */
+.btn-primary 
+{
+    background: linear-gradient(
+        180deg,
+        rgba(100, 180, 255, 0.9) 0%,
+        rgba(30, 120, 220, 0.95) 50%,
+        rgba(20, 90, 180, 1) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow:
+        0 4px 15px rgba(30, 120, 220, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Gloss shine on button */
+.btn-primary::before 
+{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.35),
+        rgba(255, 255, 255, 0.05)
+    );
+    border-radius: 12px 12px 0 0;
+    pointer-events: none;
+}
+
+.btn-primary:hover 
+{
+    background: linear-gradient(
+        180deg,
+        rgba(130, 200, 255, 0.95) 0%,
+        rgba(50, 140, 240, 1) 50%,
+        rgba(30, 100, 200, 1) 100%
+    );
+    box-shadow:
+        0 6px 20px rgba(30, 120, 220, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    transform: translateY(-1px);
+}
+
+.btn-success 
+{
+    background: linear-gradient(
+        180deg,
+        rgba(100, 220, 150, 0.9) 0%,
+        rgba(30, 160, 90, 0.95) 50%,
+        rgba(20, 120, 60, 1) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow:
+        0 4px 15px rgba(30, 160, 90, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-success::before 
+{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.35),
+        rgba(255, 255, 255, 0.05)
+    );
+    border-radius: 12px 12px 0 0;
+    pointer-events: none;
+}
+
+.btn-outline-secondary 
+{
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 12px;
+    color: #1a3a4a;
+    backdrop-filter: blur(5px);
+    transition: all 0.2s ease;
+}
+
+.btn-outline-secondary:hover 
+{
+    background: rgba(255, 255, 255, 0.5);
+    color: #1a3a4a;
+}
+
+/* Links */
+a {
+    color: #1a6abf;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+a:hover 
+{
+    color: #0d4a8f;
+    text-decoration: underline;
+}
+
+/* Navbar (for dashboard) */
+.glass-nav {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Contact list items */
+.contact-item 
+{
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.contact-item:hover 
+{
+    background: rgba(255, 255, 255, 0.35);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
