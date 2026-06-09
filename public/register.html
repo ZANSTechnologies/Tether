@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <!--This file builds out the register page 
 when a new user needs to create a username and password-->
-
 <html>
     <head>
         <title>Contact Manager - Register</title>
@@ -15,14 +14,14 @@ when a new user needs to create a username and password-->
             <div class="row justify-content-center">
                 <div class="col-md-4">
                     <h1 class="text-center">Register</h1>
+                    <input type="text" placeholder="First Name" class="form-control mb-3" id="first">
+                    <input type="text" placeholder="Last Name" class="form-control mb-3" id="last">
                     <input type="text" placeholder="Username" class="form-control mb-3" id="username">
-                    <input type="text" placeholder="FirstName" class="form-control mb-3" id="first">
-                    <input type="text" placeholder="LastName" class="form-control mb-3" id="last">
                     <input type="password" placeholder="Password" class="form-control mb-3" id="password">
                     <input type="password" placeholder="Confirm Password" class="form-control mb-3" id="confirmPassword">
                     <span id="registerResult"></span>
-                    <button class="btn btn-primary w-100" id="registerBtn" onclick="registerUser();">Register</button>
-                    <p class="text-center mt-3">Already have an account? <a href="index.html">Log In</a></p>
+                    <button class="btn btn-primary w-100 mt-2" id="registerBtn" onclick="registerUser();">Register</button>
+                    <p class="text-center mt-3">Already have an account? <a href="indexBlue.html">Log In</a></p>
                 </div>
             </div>
         </div>

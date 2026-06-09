@@ -1,3 +1,5 @@
+// Updates all fields at once. Fill out the form, hit save, sends everything in one go.
+
 document.addEventListener("DOMContentLoaded", function()
 {
     readCookie();
