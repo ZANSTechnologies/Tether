@@ -1,13 +1,10 @@
-// This file handles the edit contact page (editContact.html).
+// This file handles editContact.html.
 // It reads contact data from URL parameters, pre-populates the form,
 // and calls updateContact() once per field on submit.
 
 document.addEventListener("DOMContentLoaded", function()
 {
-    // Verify user is logged in, redirect to login if not.
     readCookie();
-
-    // Pre-populate form fields from URL parameters.
     loadContactData();
 
     // Wire up form submission to editContact().
@@ -18,8 +15,8 @@ document.addEventListener("DOMContentLoaded", function()
     });
 });
 
-// Reads contact data from URL query parameters and populates the form fields.
-// If no contact ID is found in the URL, redirects back to dashboard.
+// Reads contact data from URL query parameters and populates form fields.
+// If no contact ID is found in URL, redirects back to dashboard.
 function loadContactData()
 {
     let params = new URLSearchParams(window.location.search);
@@ -47,7 +44,6 @@ function loadContactData()
 // Redirects to dashboard on success.
 function editContact()
 {
-    // Get contact ID from URL.
     let params = new URLSearchParams(window.location.search);
     let contactId = params.get("id");
 
@@ -71,11 +67,10 @@ function editContact()
         return;
     }
 
-    // Disable button while saving.
     editContactButton.disabled = true;
     editContactButton.innerHTML = "Saving...";
 
-    // Call updateContact() once per field - each makes its own POST to UpdateContact.php.
+    // Call updateContact() once per field, each makes its own POST to UpdateContact.php.
     updateContact(contactId, "FirstName", contactFirstName);
     updateContact(contactId, "LastName", contactLastName);
     updateContact(contactId, "Phone", contactPhone);
