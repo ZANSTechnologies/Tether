@@ -88,6 +88,7 @@ function renderContactList(contacts)
 
 		const actions = document.createElement("div");
 		actions.className = "d-flex gap-2";
+		actions.style.cssText = "display:flex;justify-content:space-around";
 
 		const editBtn = document.createElement("button");
 		editBtn.className = "btn btn-primary btn-sm";
