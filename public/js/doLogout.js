@@ -1,7 +1,7 @@
 // NOT API -> NO SERVER INTERACTION
 // Called from the logoutButton on tether.html. Resets globals and cookie and 
 // redirects user to index.html. 
-export function doLogout()
+function doLogout()
 {
 	userId = 0;
 	firstName = "";

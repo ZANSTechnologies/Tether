@@ -5,6 +5,7 @@
 document.addEventListener("DOMContentLoaded", function()
 {
     readCookie();
+
     loadContactData();
 
     // Wire up form submission to editContact().
