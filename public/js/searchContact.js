@@ -13,7 +13,7 @@ function prepareUpdate(contactID, contactFirstName, contactLastName, contactPhon
 	const searchParams = new URLSearchParams(paramsData);
 
 	// Append the url with the search parameters
-	const url = new URL('http://tether/html/editContact.html')
+	const url = new URL('https://tetherbyzans.com/html/editContact.html')	
 	url.search = searchParams.toString();
 	
 	// Perform redirct to editContact.html with injected searchParams
