@@ -40,7 +40,7 @@ function readCookie()
 	
 	if( userId < 0 ) // no valid user read from cookie
 	{
-		window.location.href = "index.html"; // send to landing page
+		window.location.href = "../index.html"; // send to landing page
 	}
 	else
 	{
