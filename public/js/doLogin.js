@@ -53,7 +53,7 @@ function doLogin()
 				saveCookie();
 	
 				// update url / enter the tether webapp
-				window.location.href = "dashboard.html";
+				window.location.href = "../html/dashboard.html";
 			}
 		};
 		xhr.send(jsonPayload);

@@ -24,7 +24,7 @@ function loadContactData()
 
     if (!contactId)
     {
-        window.location.href = "dashboard.html";
+        window.location.href = "../html/dashboard.html";
         return;
     }
 
@@ -82,6 +82,6 @@ function editContact()
 
     setTimeout(function()
     {
-        window.location.href = "dashboard.html";
+        window.location.href = "../html/dashboard.html";
     }, 1500);
 }

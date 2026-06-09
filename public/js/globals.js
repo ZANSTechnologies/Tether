@@ -1,5 +1,5 @@
 // Literal Constants.
-const urlBase = 'http://tetherbyzans.com/LAMPAPI';
+const urlBase = 'http://tether/LAMPAPI';
 const extension = 'php';
 
 // User specific globals.

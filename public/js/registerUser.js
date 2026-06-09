@@ -42,7 +42,7 @@ function registerUser()
 
                 saveCookie();
 
-                window.location.href = "dashboard.html";
+                window.location.href = "../html/dashboard.html";
             }
         };
         xhr.send(jsonPayload);
