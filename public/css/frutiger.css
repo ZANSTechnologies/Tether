@@ -11,7 +11,7 @@ body
 {
     font-family: 'Nunito', sans-serif;
     min-height: 100vh;
-    background-image: url('../Frutiger_mild_image.png');
+    background-image: url('../images/Frutiger_mild_image.png');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
