@@ -1,7 +1,13 @@
+// This file handles editContact.html.
+// It reads contact data from URL parameters, pre-populates the form,
+// and calls updateContact() once per field on submit.
+
 document.addEventListener("DOMContentLoaded", function()
 {
     readCookie();
     loadContactData();
+
+    // Wire up form submission to editContact().
     document.getElementById("editContactForm").addEventListener("submit", function(event)
     {
         event.preventDefault();
@@ -9,34 +15,39 @@ document.addEventListener("DOMContentLoaded", function()
     });
 });
 
+// Reads contact data from URL query parameters and populates form fields.
+// If no contact ID is found in URL, redirects back to dashboard.
 function loadContactData()
 {
-    // Read contact data from URL query parameters
     let params = new URLSearchParams(window.location.search);
     let contactId = params.get("id");
-    let firstName = params.get("firstName");
-    let lastName = params.get("lastName");
-    let phone = params.get("phone");
-    let email = params.get("email");
 
-    // If no contact ID in URL, kick back to dashboard
     if (!contactId)
     {
         window.location.href = "dashboard.html";
         return;
     }
 
-    // Pre-populate the form fields
+    // Read remaining fields from URL and populate form.
+    let firstName = params.get("firstName");
+    let lastName = params.get("lastName");
+    let phone = params.get("phone");
+    let email = params.get("email");
+
     document.getElementById("editContactFirstName").value = firstName || "";
     document.getElementById("editContactLastName").value = lastName || "";
     document.getElementById("editContactPhone").value = phone || "";
     document.getElementById("editContactEmail").value = email || "";
 }
 
+// Validates form fields and calls updateContact() once per field.
+// Redirects to dashboard on success.
 function editContact()
 {
     let params = new URLSearchParams(window.location.search);
     let contactId = params.get("id");
+
+   // Get current form values.
     let contactFirstName = document.getElementById("editContactFirstName").value.trim();
     let contactLastName = document.getElementById("editContactLastName").value.trim();
     let contactPhone = document.getElementById("editContactPhone").value.trim();
@@ -44,9 +55,11 @@ function editContact()
     let contactEditResult = document.getElementById("contactEditResult");
     let editContactButton = document.getElementById("editContactButton");
 
+    // Reset result message.
     contactEditResult.className = "mt-3 text-center";
     contactEditResult.innerHTML = "";
 
+    // Validate all fields are filled.
     if (contactFirstName == "" || contactLastName == "" || contactPhone == "" || contactEmail == "")
     {
         contactEditResult.classList.add("text-danger");
@@ -54,76 +67,21 @@ function editContact()
         return;
     }
 
-    let temp = {
-        ContactID: contactId,
-        FirstName: contactFirstName,
-        LastName: contactLastName,
-        Phone: contactPhone,
-        Email: contactEmail,
-        UserID: userId
-    };
-
-    let jsonPayload = JSON.stringify(temp);
-    let url = urlBase + "/UpdateContact." + extension;
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST", url, true);
-    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-
     editContactButton.disabled = true;
     editContactButton.innerHTML = "Saving...";
 
-    try
+    // Call updateContact() once per field, each makes its own POST to UpdateContact.php.
+    updateContact(contactId, "FirstName", contactFirstName);
+    updateContact(contactId, "LastName", contactLastName);
+    updateContact(contactId, "Phone", contactPhone);
+    updateContact(contactId, "Email", contactEmail);
+
+    // Show success and redirect to dashboard after 1.5 seconds.
+    contactEditResult.classList.add("text-success");
+    contactEditResult.innerHTML = contactFirstName + " " + contactLastName + " has been updated!";
+
+    setTimeout(function()
     {
-        xhr.onreadystatechange = function()
-        {
-            if (this.readyState == 4)
-            {
-                editContactButton.disabled = false;
-                editContactButton.innerHTML = "Save Changes";
-
-                if (this.status != 200)
-                {
-                    contactEditResult.classList.add("text-danger");
-                    contactEditResult.innerHTML = "Edit Contact Error: Could not reach the server.";
-                    return;
-                }
-
-                let jsonObject;
-                try
-                {
-                    jsonObject = JSON.parse(xhr.responseText);
-                }
-                catch(error)
-                {
-                    contactEditResult.classList.add("text-danger");
-                    contactEditResult.innerHTML = "Edit Contact Error: The server returned an invalid response.";
-                    return;
-                }
-
-                if (jsonObject.error == "")
-                {
-                    contactEditResult.classList.add("text-success");
-                    contactEditResult.innerHTML = contactFirstName + " " + contactLastName + " has been updated!";
-                    // Go back to dashboard after successful edit
-                    setTimeout(function()
-                    {
-                        window.location.href = "dashboard.html";
-                    }, 1500);
-                }
-                else
-                {
-                    contactEditResult.classList.add("text-danger");
-                    contactEditResult.innerHTML = "Edit Contact Error: " + jsonObject.error;
-                }
-            }
-        };
-        xhr.send(jsonPayload);
-    }
-    catch(error)
-    {
-        editContactButton.disabled = false;
-        editContactButton.innerHTML = "Save Changes";
-        contactEditResult.classList.add("text-danger");
-        contactEditResult.innerHTML = error.message;
-    }
+        window.location.href = "dashboard.html";
+    }, 1500);
 }
