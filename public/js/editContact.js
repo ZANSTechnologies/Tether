@@ -1,10 +1,24 @@
+var params = new URLSearchParams(window.location.search);
+var contactId = params.get("id");
+
+// Read remaining fields from URL and populate form.
+var formFirstName = params.get("firstName");
+var formLastName = params.get("lastName");
+var formPhone = params.get("phone");
+var formEmail = params.get("email");
+
 // This file handles editContact.html.
 // It reads contact data from URL parameters, pre-populates the form,
 // and calls updateContact() once per field on submit.
-
 document.addEventListener("DOMContentLoaded", function()
 {
     readCookie();
+
+    if (!contactId)
+    {
+        window.location.href = "../html/dashboard.html";
+        return;
+    }
 
     loadContactData();
 
@@ -20,25 +34,11 @@ document.addEventListener("DOMContentLoaded", function()
 // If no contact ID is found in URL, redirects back to dashboard.
 function loadContactData()
 {
-    let params = new URLSearchParams(window.location.search);
-    let contactId = params.get("id");
 
-    if (!contactId)
-    {
-        window.location.href = "../html/dashboard.html";
-        return;
-    }
-
-    // Read remaining fields from URL and populate form.
-    let firstName = params.get("firstName");
-    let lastName = params.get("lastName");
-    let phone = params.get("phone");
-    let email = params.get("email");
-
-    document.getElementById("editContactFirstName").value = firstName || "";
-    document.getElementById("editContactLastName").value = lastName || "";
-    document.getElementById("editContactPhone").value = phone || "";
-    document.getElementById("editContactEmail").value = email || "";
+    document.getElementById("editContactFirstName").value = formFirstName || "";
+    document.getElementById("editContactLastName").value = formLastName || "";
+    document.getElementById("editContactPhone").value = formPhone || "";
+    document.getElementById("editContactEmail").value = formEmail || "";
 }
 
 // Validates form fields and calls updateContact() once per field.
@@ -72,10 +72,22 @@ function editContact()
     editContactButton.innerHTML = "Saving...";
 
     // Call updateContact() once per field, each makes its own POST to UpdateContact.php.
-    updateContact(contactId, "FirstName", contactFirstName);
-    updateContact(contactId, "LastName", contactLastName);
-    updateContact(contactId, "Phone", contactPhone);
-    updateContact(contactId, "Email", contactEmail);
+    if (formFirstName != contactFirstName)
+    {
+        updateContact(contactId, "FirstName", contactFirstName);
+    }
+    if (formLastName != contactLastName)
+    {
+        updateContact(contactId, "LastName", contactLastName);
+    }
+    if (formPhone != contactPhone)
+    {
+        updateContact(contactId, "Phone", contactPhone);
+    }
+    if (formEmail != contactEmail)
+    {
+        updateContact(contactId, "Email", contactEmail);
+    }
 
     // Show success and redirect to dashboard after 1.5 seconds.
     contactEditResult.classList.add("text-success");
