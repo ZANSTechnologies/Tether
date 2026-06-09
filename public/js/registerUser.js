@@ -40,9 +40,7 @@ function registerUser()
                 firstName = jsonObject.FirstName;
                 lastName  = jsonObject.LastName;
 
-                saveCookie();
-
-                window.location.href = "../html/dashboard.html";
+                doLogout();
             }
         };
         xhr.send(jsonPayload);
