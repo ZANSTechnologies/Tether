@@ -1,6 +1,16 @@
+// Setup editContact globals
+// Read contact data from URL query parameters
+var params = new URLSearchParams(window.location.search);
+var contactId = params.get("id");
+var contactFirstName = params.get("firstName");
+var contactLastName = params.get("lastName");
+var contactPhone = params.get("phone");
+var contactEmail = params.get("email");
+
 document.addEventListener("DOMContentLoaded", function()
 {
     readCookie();
+
     loadContactData();
     document.getElementById("editContactForm").addEventListener("submit", function(event)
     {
@@ -11,14 +21,6 @@ document.addEventListener("DOMContentLoaded", function()
 
 function loadContactData()
 {
-    // Read contact data from URL query parameters
-    let params = new URLSearchParams(window.location.search);
-    let contactId = params.get("id");
-    let firstName = params.get("firstName");
-    let lastName = params.get("lastName");
-    let phone = params.get("phone");
-    let email = params.get("email");
-
     // If no contact ID in URL, kick back to dashboard
     if (!contactId)
     {
@@ -27,23 +29,14 @@ function loadContactData()
     }
 
     // Pre-populate the form fields
-    document.getElementById("editContactFirstName").value = firstName || "";
-    document.getElementById("editContactLastName").value = lastName || "";
-    document.getElementById("editContactPhone").value = phone || "";
-    document.getElementById("editContactEmail").value = email || "";
+    document.getElementById("editContactFirstName").value = contactFirstName || "";
+    document.getElementById("editContactLastName").value = contactLastName || "";
+    document.getElementById("editContactPhone").value = contactPhone || "";
+    document.getElementById("editContactEmail").value = contactEmail || "";
 }
 
 function editContact()
 {
-    let params = new URLSearchParams(window.location.search);
-    let contactId = params.get("id");
-    let contactFirstName = document.getElementById("editContactFirstName").value.trim();
-    let contactLastName = document.getElementById("editContactLastName").value.trim();
-    let contactPhone = document.getElementById("editContactPhone").value.trim();
-    let contactEmail = document.getElementById("editContactEmail").value.trim();
-    let contactEditResult = document.getElementById("contactEditResult");
-    let editContactButton = document.getElementById("editContactButton");
-
     contactEditResult.className = "mt-3 text-center";
     contactEditResult.innerHTML = "";
 
@@ -55,12 +48,9 @@ function editContact()
     }
 
     let temp = {
-        ContactID: contactId,
-        FirstName: contactFirstName,
-        LastName: contactLastName,
-        Phone: contactPhone,
-        Email: contactEmail,
-        UserID: userId
+        text: contactId,
+        contactID: contactFirstName,
+        toUpdate: contactLastName
     };
 
     let jsonPayload = JSON.stringify(temp);
