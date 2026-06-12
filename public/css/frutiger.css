@@ -3,8 +3,7 @@
    Apply to all pages by linking after Bootstrap
 */
 
-/* Google Font */
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+/* Google Font is loaded via <link> tags in each HTML head (faster than @import). */
 
 /* Base */
 body 
@@ -44,8 +43,7 @@ body
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient
-    (
+    background: linear-gradient(
         90deg,
         transparent,
         rgba(255, 255, 255, 0.9),
@@ -62,8 +60,7 @@ body
     left: 0;
     width: 1px;
     height: 100%;
-    background: linear-gradient
-    (
+    background: linear-gradient(
         180deg,
         rgba(255, 255, 255, 0.8),
         transparent,
@@ -278,4 +275,99 @@ a:hover
     background: rgba(255, 255, 255, 0.35);
     transform: translateY(-1px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+/* ==========================================================================
+   Additions: greeting contrast, list legend, delete modal, password criteria
+   ========================================================================== */
+
+/* Greeting under page titles. Replaces Bootstrap's .text-muted, which fails
+   WCAG contrast on the light Aero background. */
+.user-greeting
+{
+    color: #2c4a5e;
+    font-weight: 600;
+}
+
+/* Legend above the contact list */
+.list-legend
+{
+    color: #2c4a5e;
+    margin-bottom: 20px;
+}
+
+/* Bootstrap switch, recolored to match the Aero blues */
+.form-check-input:checked
+{
+    background-color: #1a7ed5;
+    border-color: #1a7ed5;
+}
+
+/* Delete confirmation modal */
+.modal-overlay
+{
+    position: fixed;
+    inset: 0;
+    background: rgba(30, 60, 90, 0.35);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+/* The hidden attribute must win over display:flex above */
+.modal-overlay[hidden]
+{
+    display: none;
+}
+
+.modal-card
+{
+    max-width: 420px;
+    width: 100%;
+}
+
+/* Password criteria checklist (register page) */
+.criteria-list
+{
+    list-style: none;
+    padding-left: 0;
+    margin: 0 0 1rem 0;
+    font-size: 0.9rem;
+}
+
+.criteria-list li
+{
+    padding-left: 1.5em;
+    position: relative;
+    color: #5a6b78;
+    transition: color 0.2s ease;
+}
+
+.criteria-list li::before
+{
+    content: '\2717'; /* x mark */
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+    color: #b04848;
+}
+
+.criteria-list li.met
+{
+    color: #1d7a45;
+}
+
+.criteria-list li.met::before
+{
+    content: '\2713'; /* check mark */
+    color: #1d7a45;
+}
+
+/* Disabled buttons keep the glass look but read as inactive */
+.btn-primary:disabled
+{
+    opacity: 0.55;
 }
