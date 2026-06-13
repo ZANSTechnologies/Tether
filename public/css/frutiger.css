@@ -276,12 +276,7 @@ a:hover
     transform: translateY(-1px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
-/* ==========================================================================
-   Additions: greeting contrast, list legend, delete modal, password criteria
-   ========================================================================== */
 
-/* Greeting under page titles. Replaces Bootstrap's .text-muted, which fails
-   WCAG contrast on the light Aero background. */
 .user-greeting
 {
     color: #2c4a5e;
