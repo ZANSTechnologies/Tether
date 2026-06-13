@@ -1,54 +1,48 @@
 <?php
 	require_once 'Functions.php';
 
-	// Fetch POST request JSON from searchColor().
+	// Fetch POST request JSON from searchContact().
     $inputData = getRequestInfo();
-	
-	$searchResults = ""; //< Search Results Container (content viewable).
-	$searchCount = 0; //< Search Counter (when zero...).
 
     // Connect to mySQL Database.
 	$connection = new mysqli("localhost", "ContactUser", "ContactPassword123!", "ContactManager");
-	if ($connection->connect_error) 
+	if ($connection->connect_error)
 	{
 		returnWithError( $connection->connect_error);
-	} 
+	}
 	else
 	{
         // Prepare mySQL query.
 		$statement = $connection->prepare("SELECT FirstName, LastName, Phone, Email, ID
-                                   FROM Contacts 
-                                   WHERE (FirstName LIKE ? OR LastName LIKE ? OR Email LIKE ?) 
+                                   FROM Contacts
+                                   WHERE (FirstName LIKE ? OR LastName LIKE ? OR Email LIKE ?)
                                    AND UserID=?");
 
-		// Prepare the name parameter, concatenating the SQL '%' wildcard on 
-		// both ends. Can be used for the FirstName, LastName, and Email.
+		// Concatenate the SQL '%' wildcard on both ends. An empty search
+		// therefore matches EVERY contact (used by the dashboard's
+		// load-everything-on-arrival behavior).
 		$contactName = "%" . $inputData["search"] . "%";
 
-		// Bind $inputData and $inputData["userId"] as parameters (?) to the query.
 		$statement->bind_param("sssi", $contactName, $contactName, $contactName, $inputData["UserID"]);
-		
-		// Execute the prepared query statement.
 		$statement->execute();
-		
-		// Retrieve result set from the statement.
 		$result = $statement->get_result();
-		
-		// Loop over rows of the result set's associative arrray (key-value).
+
+		// Collect rows into a PHP array; json_encode handles all escaping,
+		// so contact names containing quotes can't break the response.
+		$searchResults = array();
 		while($row = $result->fetch_assoc())
 		{
-			if( $searchCount > 0 )
-			{
-				$searchResults .= ",";
-			}
-			$searchCount++;
-
-			// Create returning JSON string.
-			$searchResults .= '{"FirstName" : "' . $row["FirstName"] . '", "LastName" : "' . $row["LastName"] . '", "Phone" : "' . $row["Phone"] . '", "Email" : "' . $row["Email"] . '", "ID" : "' . $row["ID"] . '"}';
+			$searchResults[] = array(
+				"FirstName" => $row["FirstName"],
+				"LastName" => $row["LastName"],
+				"Phone" => $row["Phone"],
+				"Email" => $row["Email"],
+				"ID" => (int)$row["ID"]
+			);
 		}
-		
+
 		// Return results (no records or more) as JSON.
-		if( $searchCount == 0 )
+		if( count($searchResults) == 0 )
 		{
 			returnWithError( "No Records Found" );
 		}
@@ -56,7 +50,7 @@
 		{
 			returnWithInfo( $searchResults );
 		}
-		
+
 		$statement->close(); // Close Query Statement.
 		$connection->close(); // Close database connection.
 	}
@@ -65,15 +59,12 @@
     // Helper Functions
 	function returnWithError( $error )
 	{
-		$retValue = '{"results":[],"error":"' . $error . '"}';
-		sendResultInfoAsJson( $retValue );
+		sendResultInfoAsJson( json_encode(array("results" => array(), "error" => $error)) );
 	}
-	
-	// Will return an array of Results of contact JSON objects.
+
+	// Returns an array of contact objects under "results".
 	function returnWithInfo( $searchResults )
 	{
-		$retValue = '{"results":[' . $searchResults . '],"error":""}';
-		sendResultInfoAsJson( $retValue );
+		sendResultInfoAsJson( json_encode(array("results" => $searchResults, "error" => "")) );
 	}
-	
 ?>
