@@ -1,17 +1,15 @@
 <?php
 	require_once 'Functions.php';
 
-	// Fetch POST request JSON from doLogin().
+	// Fetch POST request JSON from deleteContact().
 	$inputData = getRequestInfo();
-	
-    // The only information the frontend will send to the database is the contact's
-    // ID and its associated user. This is so if there are multiple contacts 
-    // with the same information, we can isolate one from many. This assumes that
-    // the contact ID is attached to some "button" input specific to that contact. 
+
+    // Only the contact's ID and its owning user are needed. The UserID in
+    // the WHERE clause means a user can only ever delete their OWN contacts.
 	$contactID = $inputData["contactID"];
     $userID = $inputData["userID"];
 
-	$connection = new mysqli("localhost", "ContactUser", "ContactPassword123!", "ContactManager"); 	
+	$connection = new mysqli("localhost", "ContactUser", "ContactPassword123!", "ContactManager");
 	if( $connection->connect_error )
 	{
 		returnWithError( $connection->connect_error );
@@ -20,10 +18,9 @@
 	{
 		$statement = $connection->prepare("DELETE FROM Contacts WHERE ID=? AND UserID=?");
 
-		$statement->bind_param("ss", $contactID, $userID);
+		$statement->bind_param("ii", $contactID, $userID);
 		$statement->execute();
-		// FIX: Removed $statement->get_result() — DELETE does not return a result set.
-		// Calling get_result() on a non-SELECT statement causes a fatal PHP error.
+		// No $statement->get_result() — DELETE does not return a result set.
 
         // Delete Success!
         if( $statement->affected_rows > 0 )
@@ -44,18 +41,20 @@
 		$statement->close();
 		$connection->close();
 	}
-	
+
 	///////////////////////////////////////////////////////////////////////////
     // Helper Functions
 	function returnWithError( $error )
 	{
-		$returnValue = '{"ID":0,"UserID":"0","error":"' . $error . '"}';
-		sendResultInfoAsJson( $returnValue );
+		sendResultInfoAsJson( json_encode(array(
+			"ID" => 0, "UserID" => 0, "error" => $error
+		)) );
 	}
-	
+
 	function returnWithInfo( $ID, $UserID )
 	{
-		$returnValue = '{"ID":' . $ID . ',"UserID":"' . $UserID . '","error":""}';
-		sendResultInfoAsJson( $returnValue );
+		sendResultInfoAsJson( json_encode(array(
+			"ID" => (int)$ID, "UserID" => (int)$UserID, "error" => ""
+		)) );
 	}
 ?>

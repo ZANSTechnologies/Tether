@@ -1,53 +1,68 @@
-// Used to update a single field of an existing contact in the database.
+// Updates a single field of an existing contact in the database.
 // contactID (int): the ID of the contact to update.
 // toUpdate (string): the column name to update ("FirstName", "LastName", "Phone", or "Email").
 // text (string): the new value to write into that column.
+//
+// Returns a Promise so editContact.js can wait for ALL field updates to
+// finish (Promise.all) before declaring success and redirecting. Previously
+// the success message and redirect fired before any request completed.
 function updateContact(contactID, toUpdate, text)
 {
-    // double check in PHP as well.
-    const validFields = ["FirstName", "LastName", "Phone", "Email"];
-    if (!validFields.includes(toUpdate))
+    return new Promise(function(resolve, reject)
     {
-        document.getElementById("updateResult").innerHTML = "Invalid field: " + toUpdate;
-        return;
-    }
+        // double check in PHP as well.
+        const validFields = ["FirstName", "LastName", "Phone", "Email"];
+        if (!validFields.includes(toUpdate))
+        {
+            reject(new Error("Invalid field: " + toUpdate));
+            return;
+        }
 
-    // Create JSON string.
-    let temp = {contactID:contactID, toUpdate:toUpdate, text:text};
-    let jsonPayload = JSON.stringify(temp);
+        // userID is included so UpdateContact.php can verify ownership —
+        // without it, any client could edit any contact in the database.
+        let temp = {contactID:contactID, toUpdate:toUpdate, text:text, userID:userId};
+        let jsonPayload = JSON.stringify(temp);
 
-    let url = urlBase + '/UpdateContact.' + extension;
+        let url = urlBase + '/UpdateContact.' + extension;
 
-    // Prepare an asynchronous POST request using the UpdateContact.php script.
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST", url, true);
-    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
 
-    try
-    {
         xhr.onreadystatechange = function()
         {
-            if (this.readyState == 4 && this.status == 200)
+            if (this.readyState != 4) return;
+
+            if (this.status != 200)
             {
-                // JSON from returnWithInfo() or returnWithError() in UpdateContact.php.
-                let jsonObject = JSON.parse(xhr.responseText);
-
-                //"contactID":0
-                if (jsonObject.contactID < 1)
-                {
-                    document.getElementById("updateResult").innerHTML = jsonObject.error;
-                    return;
-                }
-
-                // Update was successful, should update UI
-                document.getElementById("updateResult").innerHTML = 
-                    jsonObject.updatedField + " updated successfully to: " + jsonObject.newValue;
+                reject(new Error("Could not reach the server."));
+                return;
             }
+
+            let jsonObject;
+            try
+            {
+                jsonObject = JSON.parse(xhr.responseText);
+            }
+            catch(error)
+            {
+                reject(new Error("The server returned an invalid response."));
+                return;
+            }
+
+            // "contactID":0 means the update failed.
+            if (jsonObject.contactID < 1)
+            {
+                reject(new Error(jsonObject.error));
+                return;
+            }
+
+            // Per-field progress message.
+            document.getElementById("updateResult").innerHTML =
+                jsonObject.updatedField + " updated successfully.";
+            resolve(jsonObject);
         };
+
         xhr.send(jsonPayload);
-    }
-    catch(err)
-    {
-        document.getElementById("updateResult").innerHTML = err.message;
-    }
+    });
 }

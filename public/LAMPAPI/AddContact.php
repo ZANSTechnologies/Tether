@@ -9,26 +9,28 @@
 	$contactEmail = $inputData["Email"];
 	$userId = $inputData["UserID"];
 
-	$connection = new mysqli("localhost", "ContactUser", "ContactPassword123!", "ContactManager"); 	
+	$connection = new mysqli("localhost", "ContactUser", "ContactPassword123!", "ContactManager");
 	if( $connection->connect_error )
 	{
 		returnWithError( $connection->connect_error );
 	}
 	else
 	{
-		// Add a conteact with the information the user supplied from frontend.
+		// Add a contact with the information the user supplied from frontend.
 		$statement = $connection->prepare(
 			"INSERT into Contacts (FirstName,LastName,Phone,Email,UserID) VALUES(?,?,?,?,?)");
 		$statement->bind_param(
 			"ssssi",
 			$contactFirstName,
 			$contactLastName,
-			$contactPhone, 
-			$contactEmail, 
+			$contactPhone,
+			$contactEmail,
 			$userId);
 		if ($statement->execute()) // no $statement->get_result() for INSERT's
 		{
-			returnWithInfo($contactFirstName, $contactLastName, $contactPhone, $contactEmail, $userId);
+			// insert_id: the new contact's ID, so the frontend can reference
+			// it immediately (used by the dashboard's new-bubble animation).
+			returnWithInfo($statement->insert_id, $contactFirstName, $contactLastName, $contactPhone, $contactEmail, $userId);
 		}
 		else
 		{
@@ -38,20 +40,22 @@
 		// Close connection.
 		$statement->close();
 		$connection->close();
-		
 	}
 
 	///////////////////////////////////////////////////////////////////////////
     // Helper Functions
 	function returnWithError( $error )
 	{
-		$returnValue = '{"ID":0,"FirstName":"","LastName":"","Phone":"","Email":"","UserID":"","error":"' . $error . '"}';
-		sendResultInfoAsJson( $returnValue );
+		sendResultInfoAsJson( json_encode(array(
+			"ID" => 0, "FirstName" => "", "LastName" => "", "Phone" => "", "Email" => "", "UserID" => 0, "error" => $error
+		)) );
 	}
-	
-	function returnWithInfo( $FirstName, $LastName, $Phone, $Email, $UserID )
+
+	function returnWithInfo( $ID, $FirstName, $LastName, $Phone, $Email, $UserID )
 	{
-		$returnValue = '{"FirstName":"' . $FirstName . '","LastName":"' . $LastName . '","Phone":"' . $Phone . '","Email":"' . $Email . '","UserID":"' . $UserID . '","error":""}';
-		sendResultInfoAsJson( $returnValue );
+		sendResultInfoAsJson( json_encode(array(
+			"ID" => (int)$ID, "FirstName" => $FirstName, "LastName" => $LastName,
+			"Phone" => $Phone, "Email" => $Email, "UserID" => (int)$UserID, "error" => ""
+		)) );
 	}
 ?>

@@ -1,33 +1,56 @@
 <!DOCTYPE html>
 <!--This file builds out the register page
-when a new user needs to create a username and password-->
-<html>
+when a new user needs to create a username and password.
+Works in tandem with Register.php.-->
+<html lang="en">
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Tether - Register</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="../css/frutiger.css" rel="stylesheet">
-        <script type="text/javascript" src="../js/globals.js"></script>
-        <script type="text/javascript" src="../js/cookie.js"></script>
-        <script type="text/javascript" src="../js/doLogout.js"></script>
-        <script type="text/javascript" src="../js/registerUser.js" defer></script>
+        <script src="../js/globals.js" defer></script>
+        <script src="../js/cookie.js" defer></script>
+        <script src="../js/registerUser.js" defer></script>
     </head>
     <body>
-        <div class="container mt-5">
+        <main class="container mt-5">
             <div class="row justify-content-center">
                 <div class="col-md-4">
                     <div class="glass-card">
                         <h1 class="text-center mb-4">Register</h1>
-                        <input type="text" placeholder="First Name" class="form-control mb-3" id="first">
-                        <input type="text" placeholder="Last Name" class="form-control mb-3" id="last">
-                        <input type="text" placeholder="Username" class="form-control mb-3" id="username">
-                        <input type="password" placeholder="Password" class="form-control mb-3" id="password">
-                        <input type="password" placeholder="Confirm Password" class="form-control mb-3" id="confirmPassword">
-                        <span id="registerResult" class="d-block mb-3 text-center"></span>
-                        <button class="btn btn-primary w-100" id="registerBtn" onclick="registerUser();">Register</button>
+                        <form id="registerForm" novalidate>
+                            <label for="first" class="visually-hidden">First name</label>
+                            <input type="text" placeholder="First Name" class="form-control mb-3" id="first" autocomplete="given-name">
+                            <label for="last" class="visually-hidden">Last name</label>
+                            <input type="text" placeholder="Last Name" class="form-control mb-3" id="last" autocomplete="family-name">
+                            <label for="username" class="visually-hidden">Username</label>
+                            <input type="text" placeholder="Username" class="form-control mb-3" id="username" autocomplete="username">
+                            <label for="password" class="visually-hidden">Password</label>
+                            <input type="password" placeholder="Password" class="form-control mb-3" id="password" autocomplete="new-password">
+                            <label for="confirmPassword" class="visually-hidden">Confirm password</label>
+                            <input type="password" placeholder="Confirm Password" class="form-control mb-3" id="confirmPassword" autocomplete="new-password">
+
+                            <!-- Live password criteria checklist. Updated by registerUser.js. -->
+                            <ul id="passwordCriteria" class="criteria-list" aria-live="polite">
+                                <li id="critLength">At least 8 characters</li>
+                                <li id="critUpper">An uppercase letter</li>
+                                <li id="critLower">A lowercase letter</li>
+                                <li id="critNumber">A number</li>
+                                <li id="critSpecial">A special character</li>
+                                <li id="critMatch">Passwords match</li>
+                            </ul>
+
+                            <span id="registerResult" class="d-block mb-3 text-center" role="alert"></span>
+                            <button type="submit" class="btn btn-primary w-100" id="registerBtn" disabled>Register</button>
+                        </form>
                         <p class="text-center mt-3">Already have an account? <a href="../index.html">Log In</a></p>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
     </body>
 </html>

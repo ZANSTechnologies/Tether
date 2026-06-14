@@ -1,6 +1,8 @@
-// Used to delete a contact entry from the database.
+// Deletes a contact entry from the database. Called from the confirmation
+// modal on dashboard.html (see dashboard.js) — never directly from the
+// Delete button, so there is always an "Are you sure?" step.
 // contactID (int): the ID of the contact to delete.
-// userID (int): the ID of the user that owns the contact. 
+// userID (int): the ID of the user that owns the contact.
 function deleteContact(contactID, userID)
 {
     let temp = {contactID:contactID, userID:userID};
@@ -28,8 +30,8 @@ function deleteContact(contactID, userID)
 
                 document.getElementById("deleteResult").innerHTML = "Contact deleted successfully.";
 
-                // FIX: Remove the deleted contact from the cached searchResults array
-                // and re-render the list so the user sees the change immediately,
+                // Remove the deleted contact from the cached searchResults
+                // array and re-render so the change shows immediately,
                 // without needing to search again.
                 searchResults = searchResults.filter(function(c)
                 {
